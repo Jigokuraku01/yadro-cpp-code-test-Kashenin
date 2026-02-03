@@ -1,0 +1,11 @@
+2
+09:00 19:00
+10
+09:00 1 alice
+09:05 1 bob
+09:06 2 bob 1
+09:10 1 charlie
+09:11 2 charlie 2
+09:15 3 alice
+09:20 4 bob
+09:25 3 charlie

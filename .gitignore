@@ -23,7 +23,6 @@
 *.py
 *.AppImage
 *.text
-*.txt
 code.bin
 new_task.bin
 
