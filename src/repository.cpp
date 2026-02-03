@@ -36,7 +36,7 @@ Repository::Repository(StartInfo start_info) : m_start_info(start_info) {
     }
 }
 
-std::unordered_map<std::uint32_t, TableInfo>& Repository::get_tables() {
+std::map<std::uint32_t, TableInfo>& Repository::get_tables() {
     return m_tables;
 }
 

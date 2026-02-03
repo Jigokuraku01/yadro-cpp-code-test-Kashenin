@@ -2,13 +2,12 @@
 #include "rows/irow_info.hpp"
 #include "start_info.hpp"
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <queue>
 #include <set>
 #include <string>
 #include <string_view>
-#include <unordered_map>
-#include <unordered_set>
 class TableInfo {
   public:
     TableInfo() = default;
@@ -39,40 +38,50 @@ class Repository {
 
     void add_current_user(const std::string& user_name);
     void remove_current_user(const std::string& user_name);
+    [[nodiscard]]
     bool is_user_currently_in(const std::string& user_name) const;
 
     void add_waiting_user(const std::string& user_name);
     void remove_waiting_user();
+    [[nodiscard]]
     bool has_waiting_users() const;
+    [[nodiscard]]
     std::string get_next_waiting_user() const;
+    [[nodiscard]]
     bool is_queue_full() const;
 
+    [[nodiscard]]
     bool has_free_tables() const;
 
     void add_table(std::uint32_t table_id, const TableInfo& table_info);
     TableInfo remove_table(std::uint32_t table_id);
+    [[nodiscard]]
     bool is_table_free(std::uint32_t table_id) const;
 
-    std::unordered_map<std::uint32_t, TableInfo>& get_tables();
+    std::map<std::uint32_t, TableInfo>& get_tables();
 
     void set_start_info(const StartInfo& start_info);
+    [[nodiscard]]
     StartInfo get_start_info() const;
 
     void add_history_entry(std::shared_ptr<IRowInfo> row_info);
+    [[nodiscard]]
     std::queue<std::shared_ptr<IRowInfo>> get_history() const;
 
     void add_user_table(const std::string& user_name, std::uint32_t table_id);
     void remove_user_table(const std::string& user_name);
+    [[nodiscard]]
     bool has_user_table(const std::string& user_name) const;
+    [[nodiscard]]
     std::uint32_t get_user_table_id(const std::string& user_name) const;
 
     std::set<std::string>& get_current_users();
 
   private:
     //table_id -> TableInfo
-    std::unordered_map<std::uint32_t, TableInfo> m_tables;
+    std::map<std::uint32_t, TableInfo> m_tables;
     //user_name -> table_id
-    std::unordered_map<std::string, std::uint32_t> m_user_table_map;
+    std::map<std::string, std::uint32_t> m_user_table_map;
     StartInfo m_start_info;
     std::queue<std::string> m_waiting_users;
     std::set<std::string> m_current_users;

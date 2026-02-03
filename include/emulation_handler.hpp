@@ -12,6 +12,7 @@ class EmulationHandler {
     void show_repository_history();
 
   private:
+    [[nodiscard]]
     std::uint32_t calculate_total_price(std::uint32_t time) const;
     std::shared_ptr<IReader> m_reader;
     std::shared_ptr<IWriter> m_writer;
