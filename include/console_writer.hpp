@@ -1,3 +1,4 @@
+#pragma once
 #include "iwriter.hpp"
 
 class ConsoleWriter : public IWriter {

@@ -1,3 +1,4 @@
+#pragma once
 #include "../repository.hpp"
 #include "irow_info.hpp"
 #include <cstdint>

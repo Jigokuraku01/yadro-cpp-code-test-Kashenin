@@ -36,6 +36,9 @@ set(Flags
     ${SANITIZER_FLAGS}
 )
 
+
+
+
 file(GLOB_RECURSE FILES_IN_SRC "src/*")
 
 set(SRC_FILES "")
@@ -72,6 +75,50 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_compile_options(${PROJECT_NAME} PRIVATE ${Flags})
 
 target_link_options(${PROJECT_NAME} PRIVATE ${SANITIZER_FLAGS})
+
+# ============================================================================
+# Google Test Configuration
+# ============================================================================
+
+enable_testing()
+
+# Find GTest
+find_package(GTest REQUIRED)
+include(GoogleTest)
+
+# Create a library from source files to reuse in tests
+add_library(${PROJECT_NAME}_lib STATIC ${SRC_FILES})
+target_include_directories(${PROJECT_NAME}_lib PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+    ${INCLUDE_DIRS}
+)
+target_compile_options(${PROJECT_NAME}_lib PRIVATE ${Flags})
+
+# Link main executable with library
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
+
+# Create test executable
+file(GLOB TEST_FILES "test/test_*.cpp")
+add_executable(runTests ${TEST_FILES})
+
+# Link with GTest and project library
+target_link_libraries(runTests 
+    GTest::gtest_main
+    ${PROJECT_NAME}_lib
+)
+
+target_compile_options(runTests PRIVATE ${Flags})
+target_link_options(runTests PRIVATE ${SANITIZER_FLAGS})
+
+# Exclude test directory from clang-tidy
+set_target_properties(runTests PROPERTIES
+    CXX_CLANG_TIDY ""
+)
+
+# Discover tests automatically
+gtest_discover_tests(runTests)
+
+# ============================================================================
 
 find_program(CLANG_TIDY NAMES clang-tidy-18)
 
