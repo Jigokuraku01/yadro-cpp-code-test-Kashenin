@@ -82,12 +82,12 @@ StartInfo FileReader::read_start_info() {
     return start_info;
 }
 
-std::optional<std::unique_ptr<IInputRowInfo>> FileReader::read_row() {
+std::optional<std::shared_ptr<IInputRowInfo>> FileReader::read_row() {
     if (m_input_file.eof()) {
         return std::nullopt;
     }
 
     std::string line = read_line(m_input_file);
-    std::unique_ptr<IInputRowInfo> row_info = InputRowFactory::create_row(line);
+    std::shared_ptr<IInputRowInfo> row_info = InputRowFactory::create_row(line);
     return row_info;
 }

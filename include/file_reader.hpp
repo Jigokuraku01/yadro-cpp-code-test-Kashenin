@@ -8,7 +8,7 @@ class FileReader : public IReader {
     explicit FileReader(std::ifstream&& input_file);
     ~FileReader() override = default;
 
-    std::optional<std::unique_ptr<IInputRowInfo>> read_row() override;
+    std::optional<std::shared_ptr<IInputRowInfo>> read_row() override;
     StartInfo read_start_info() override;
 
   private:

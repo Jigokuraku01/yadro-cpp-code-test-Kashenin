@@ -1,11 +1,14 @@
+#include "../repository.hpp"
 #include "irow_info.hpp"
-#include "repository.hpp"
 #include <cstdint>
 
 class IInputRowInfo : public IRowInfo {
   public:
     explicit IInputRowInfo(std::uint32_t row_type);
     virtual void do_step(Repository& cur_repo) = 0;
+    [[nodiscard]]
+    static std::shared_ptr<IRowInfo>
+    generate_exception_row(std::uint32_t time, std::string message);
 };
 
 class Type1RowInfo : public IInputRowInfo {

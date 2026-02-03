@@ -25,11 +25,12 @@ int main(int argc, char** argv) {
             throw MyException(Config::universal_error_code,
                               "Failed to open input file");
         }
-        std::unique_ptr<IReader> reader =
-            std::make_unique<FileReader>(std::move(input_file));
-        std::unique_ptr<IWriter> writer = std::make_unique<ConsoleWriter>();
-        EmulationHandler emulation_handler(
-            reader->read_start_info(), std::move(reader), std::move(writer));
+        std::shared_ptr<IReader> reader =
+            std::make_shared<FileReader>(std::move(input_file));
+        std::shared_ptr<IWriter> writer = std::make_shared<ConsoleWriter>();
+        StartInfo start_info = reader->read_start_info();
+        EmulationHandler emulation_handler(start_info, std::move(reader),
+                                           std::move(writer));
         emulation_handler.run_emulation();
         emulation_handler.show_repository_history();
     }

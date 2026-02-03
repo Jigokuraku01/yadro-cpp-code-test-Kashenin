@@ -3,5 +3,5 @@
 #include <memory>
 class InputRowFactory {
   public:
-    static std::unique_ptr<IInputRowInfo> create_row(const std::string& line);
+    static std::shared_ptr<IInputRowInfo> create_row(const std::string& line);
 };

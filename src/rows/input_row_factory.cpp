@@ -7,7 +7,7 @@
 #include <memory>
 #include <sstream>
 
-std::unique_ptr<IInputRowInfo>
+std::shared_ptr<IInputRowInfo>
 InputRowFactory::create_row(const std::string& line) {
     std::istringstream stream(line);
 
@@ -25,7 +25,7 @@ InputRowFactory::create_row(const std::string& line) {
                 if (!(stream >> user_name)) {
                     throw MyException(Config::format_error_code, line);
                 }
-                return std::make_unique<Type1RowInfo>(parsed_time, user_name);
+                return std::make_shared<Type1RowInfo>(parsed_time, user_name);
             }
             case 2: {
                 std::string user_name;
@@ -33,7 +33,7 @@ InputRowFactory::create_row(const std::string& line) {
                 if (!(stream >> user_name >> table_id)) {
                     throw MyException(Config::format_error_code, line);
                 }
-                return std::make_unique<Type2RowInfo>(parsed_time, user_name,
+                return std::make_shared<Type2RowInfo>(parsed_time, user_name,
                                                       table_id);
             }
             case 3: {
@@ -41,14 +41,14 @@ InputRowFactory::create_row(const std::string& line) {
                 if (!(stream >> user_name)) {
                     throw MyException(Config::format_error_code, line);
                 }
-                return std::make_unique<Type3RowInfo>(parsed_time, user_name);
+                return std::make_shared<Type3RowInfo>(parsed_time, user_name);
             }
             case 4: {
                 std::string user_name;
                 if (!(stream >> user_name)) {
                     throw MyException(Config::format_error_code, line);
                 }
-                return std::make_unique<Type4RowInfo>(parsed_time, user_name);
+                return std::make_shared<Type4RowInfo>(parsed_time, user_name);
             }
             default:
                 throw MyException(Config::format_error_code, line);

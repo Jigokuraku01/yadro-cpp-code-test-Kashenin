@@ -1,8 +1,10 @@
 #include "repository.hpp"
 
 #include "my_exception.hpp"
+#include <algorithm>
+#include <string_view>
 
-void TableInfo::set_user_name(const std::string& user_name) {
+void TableInfo::set_user_name(std::string_view user_name) {
     m_user_name = user_name;
 }
 std::string TableInfo::get_user_name() const {
@@ -47,8 +49,8 @@ void Repository::remove_current_user(const std::string& user_name) {
 bool Repository::is_user_currently_in(const std::string& user_name) const {
     return m_current_users.contains(user_name);
 }
-void Repository::add_waiting_user(std::uint32_t user_id) {
-    m_waiting_users.push(user_id);
+void Repository::add_waiting_user(const std::string& user_name) {
+    m_waiting_users.push(user_name);
 }
 void Repository::remove_waiting_user() {
     if (!m_waiting_users.empty()) {
@@ -58,7 +60,7 @@ void Repository::remove_waiting_user() {
 bool Repository::has_waiting_users() const {
     return !m_waiting_users.empty();
 }
-std::uint32_t Repository::get_next_waiting_user() const {
+std::string Repository::get_next_waiting_user() const {
     if (m_waiting_users.empty()) {
         throw MyException(1, "No waiting users available");
     }
@@ -69,11 +71,25 @@ void Repository::add_table(std::uint32_t table_id,
                            const TableInfo& table_info) {
     m_tables[table_id] = table_info;
 }
-void Repository::remove_table(std::uint32_t table_id) {
+TableInfo Repository::remove_table(std::uint32_t table_id) {
+    TableInfo removed_table = m_tables.at(table_id);
     m_tables.erase(table_id);
+    return removed_table;
 }
-bool Repository::has_table(std::uint32_t table_id) const {
-    return m_tables.contains(table_id);
+bool Repository::is_table_free(std::uint32_t table_id) const {
+    if (!m_tables.contains(table_id)) {
+        return false;
+    }
+    return !m_tables.at(table_id).is_occupied();
+}
+
+bool Repository::has_free_tables() const {
+    return std::ranges::any_of(m_tables, [](const auto& table_pair)
+                               { return !table_pair.second.is_occupied(); });
+}
+
+bool Repository::is_queue_full() const {
+    return m_waiting_users.size() >= m_tables.size();
 }
 
 void Repository::set_start_info(const StartInfo& start_info) {
@@ -84,10 +100,25 @@ StartInfo Repository::get_start_info() const {
     return m_start_info;
 }
 
-void Repository::add_history_entry(std::unique_ptr<IRowInfo> row_info) {
+void Repository::add_history_entry(std::shared_ptr<IRowInfo> row_info) {
     m_history.push(std::move(row_info));
 }
 
-std::queue<std::unique_ptr<IRowInfo>> Repository::get_history() const {
+const std::queue<std::shared_ptr<IRowInfo>>& Repository::get_history() const {
     return m_history;
+}
+
+void Repository::add_user_table(const std::string& user_name,
+                                std::uint32_t table_id) {
+    m_user_table_map[user_name] = table_id;
+}
+void Repository::remove_user_table(const std::string& user_name) {
+    m_user_table_map.erase(user_name);
+}
+bool Repository::has_user_table(const std::string& user_name) const {
+    return m_user_table_map.contains(user_name);
+}
+std::uint32_t
+Repository::get_user_table_id(const std::string& user_name) const {
+    return m_user_table_map.at(user_name);
 }

@@ -1,8 +1,15 @@
 #include "input_rows.hpp"
 
+#include "irow_info.hpp"
+#include "output_rows.hpp"
 #include <format>
+#include <memory>
 
 IInputRowInfo::IInputRowInfo(std::uint32_t row_type) : IRowInfo(row_type) {
+}
+std::shared_ptr<IRowInfo>
+IInputRowInfo::generate_exception_row(std::uint32_t time, std::string message) {
+    return std::make_shared<Type13RowInfo>(time, std::move(message));
 }
 
 Type1RowInfo::Type1RowInfo(std::uint32_t time, std::string user_name)
