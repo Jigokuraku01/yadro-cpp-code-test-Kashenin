@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(RISC-VSim LANGUAGES CXX)
+project(Computer_Club_Schedule LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
