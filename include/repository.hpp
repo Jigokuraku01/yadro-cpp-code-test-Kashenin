@@ -35,7 +35,10 @@ class TableInfo {
 struct compare_row_info {
     bool operator()(const std::shared_ptr<IRowInfo>& lhs,
                     const std::shared_ptr<IRowInfo>& rhs) const {
-        return lhs->get_time() > rhs->get_time();
+        if (lhs->get_time() != rhs->get_time()) {
+            return lhs->get_time() > rhs->get_time();
+        }
+        return lhs->get_seq_counter() > rhs->get_seq_counter();
     }
 };
 

@@ -17,7 +17,11 @@ class IRowInfo {
     [[nodiscard]]
     virtual std::string to_string() const;
 
+    [[nodiscard]]
+    std::uint32_t get_seq_counter() const;
+
   private:
     std::uint32_t m_row_type;
     std::uint32_t m_time;
+    std::uint32_t m_seq_counter;
 };
