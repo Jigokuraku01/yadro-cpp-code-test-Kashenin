@@ -104,7 +104,7 @@ void Repository::add_history_entry(std::shared_ptr<IRowInfo> row_info) {
     m_history.push(std::move(row_info));
 }
 
-const std::queue<std::shared_ptr<IRowInfo>>& Repository::get_history() const {
+std::queue<std::shared_ptr<IRowInfo>> Repository::get_history() const {
     return m_history;
 }
 
@@ -121,4 +121,8 @@ bool Repository::has_user_table(const std::string& user_name) const {
 std::uint32_t
 Repository::get_user_table_id(const std::string& user_name) const {
     return m_user_table_map.at(user_name);
+}
+
+std::set<std::string>& Repository::get_current_users() {
+    return m_current_users;
 }

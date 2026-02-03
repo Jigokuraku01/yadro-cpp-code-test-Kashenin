@@ -2,6 +2,7 @@
 
 #include "irow_info.hpp"
 #include "output_rows.hpp"
+#include "time_formatter.hpp"
 #include <format>
 #include <memory>
 
@@ -25,7 +26,8 @@ std::string Type1RowInfo::get_user_name() const {
 }
 
 std::string Type1RowInfo::to_string() const {
-    return std::format("{} 1 {}", get_time(), get_user_name());
+    return std::format("{} 1 {}", TimeFormatter::format_time(get_time()),
+                       get_user_name());
 }
 
 Type2RowInfo::Type2RowInfo(std::uint32_t time, std::string user_name,
@@ -45,8 +47,8 @@ std::uint32_t Type2RowInfo::get_table_id() const {
 }
 
 std::string Type2RowInfo::to_string() const {
-    return std::format("{} 2 {} {}", get_time(), get_user_name(),
-                       get_table_id());
+    return std::format("{} 2 {} {}", TimeFormatter::format_time(get_time()),
+                       get_user_name(), get_table_id());
 }
 
 Type3RowInfo::Type3RowInfo(std::uint32_t time, std::string user_name)
@@ -61,7 +63,8 @@ std::string Type3RowInfo::get_user_name() const {
 }
 
 std::string Type3RowInfo::to_string() const {
-    return std::format("{} 3 {}", get_time(), get_user_name());
+    return std::format("{} 3 {}", TimeFormatter::format_time(get_time()),
+                       get_user_name());
 }
 
 Type4RowInfo::Type4RowInfo(std::uint32_t time, std::string user_name)
@@ -76,5 +79,6 @@ std::string Type4RowInfo::get_user_name() const {
 }
 
 std::string Type4RowInfo::to_string() const {
-    return std::format("{} 4 {}", get_time(), get_user_name());
+    return std::format("{} 4 {}", TimeFormatter::format_time(get_time()),
+                       get_user_name());
 }

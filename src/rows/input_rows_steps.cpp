@@ -97,4 +97,5 @@ void Type4RowInfo::do_step(Repository& cur_repo) {
         cur_repo.add_history_entry(
             std::make_shared<Type12RowInfo>(get_time(), next_user, table_id));
     }
+    cur_repo.remove_current_user(get_user_name());
 }

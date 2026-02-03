@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <queue>
+#include <set>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -58,12 +59,14 @@ class Repository {
     StartInfo get_start_info() const;
 
     void add_history_entry(std::shared_ptr<IRowInfo> row_info);
-    const std::queue<std::shared_ptr<IRowInfo>>& get_history() const;
+    std::queue<std::shared_ptr<IRowInfo>> get_history() const;
 
     void add_user_table(const std::string& user_name, std::uint32_t table_id);
     void remove_user_table(const std::string& user_name);
     bool has_user_table(const std::string& user_name) const;
     std::uint32_t get_user_table_id(const std::string& user_name) const;
+
+    std::set<std::string>& get_current_users();
 
   private:
     //table_id -> TableInfo
@@ -72,6 +75,6 @@ class Repository {
     std::unordered_map<std::string, std::uint32_t> m_user_table_map;
     StartInfo m_start_info;
     std::queue<std::string> m_waiting_users;
-    std::unordered_set<std::string> m_current_users;
+    std::set<std::string> m_current_users;
     std::queue<std::shared_ptr<IRowInfo>> m_history;
 };

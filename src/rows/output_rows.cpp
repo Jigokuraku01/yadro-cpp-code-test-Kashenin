@@ -1,5 +1,6 @@
 #include "output_rows.hpp"
 
+#include "time_formatter.hpp"
 #include <format>
 
 Type11RowInfo::Type11RowInfo(std::uint32_t time, std::string user_name)
@@ -13,7 +14,8 @@ std::string Type11RowInfo::get_user_name() const {
 }
 
 std::string Type11RowInfo::to_string() const {
-    return std::format("{} 11 {}", get_time(), get_user_name());
+    return std::format("{} 11 {}", TimeFormatter::format_time(get_time()),
+                       get_user_name());
 }
 
 Type12RowInfo::Type12RowInfo(std::uint32_t time, std::string user_name,
@@ -32,8 +34,8 @@ std::uint32_t Type12RowInfo::get_table_id() const {
 }
 
 std::string Type12RowInfo::to_string() const {
-    return std::format("{} 12 {} {}", get_time(), get_user_name(),
-                       get_table_id());
+    return std::format("{} 12 {} {}", TimeFormatter::format_time(get_time()),
+                       get_user_name(), get_table_id());
 }
 
 Type13RowInfo::Type13RowInfo(std::uint32_t time, std::string error_message)
@@ -47,5 +49,6 @@ std::string Type13RowInfo::get_error_message() const {
 }
 
 std::string Type13RowInfo::to_string() const {
-    return std::format("{} 13 {}", get_time(), get_error_message());
+    return std::format("{} 13 {}", TimeFormatter::format_time(get_time()),
+                       get_error_message());
 }
