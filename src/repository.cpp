@@ -30,6 +30,13 @@ std::uint32_t TableInfo::get_last_occupied_start_time() const {
     return m_last_occupied_start_time;
 }
 
+void TableInfo::add_money_spent(std::uint32_t amount) {
+    m_total_money_spent += amount;
+}
+std::uint32_t TableInfo::get_total_money_spent() const {
+    return m_total_money_spent;
+}
+
 Repository::Repository(StartInfo start_info) : m_start_info(start_info) {
     for (std::uint32_t i = 1; i <= start_info.get_tables_cnt(); ++i) {
         m_tables[i] = TableInfo();
@@ -127,4 +134,32 @@ Repository::get_user_table_id(const std::string& user_name) const {
 
 std::set<std::string>& Repository::get_current_users() {
     return m_current_users;
+}
+
+std::uint32_t Repository::calculate_total_price(std::uint32_t time) const {
+    const auto& start_info = m_start_info;
+    return ((time + 59) / 60) * start_info.get_hour_price();
+}
+
+bool Repository::is_user_waiting(const std::string& user_name) const {
+    std::queue<std::string> temp_queue = m_waiting_users;
+    while (!temp_queue.empty()) {
+        if (temp_queue.front() == user_name) {
+            return true;
+        }
+        temp_queue.pop();
+    }
+    return false;
+}
+
+void Repository::remove_waiting_user_by_name(
+    const std::string_view& user_name) {
+    std::queue<std::string> temp_queue;
+    while (!m_waiting_users.empty()) {
+        if (m_waiting_users.front() != user_name) {
+            temp_queue.push(m_waiting_users.front());
+        }
+        m_waiting_users.pop();
+    }
+    m_waiting_users = std::move(temp_queue);
 }

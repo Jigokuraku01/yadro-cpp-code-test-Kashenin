@@ -18,10 +18,6 @@ std::uint32_t IRowInfo::get_time() const {
     return m_time;
 }
 
-std::string IRowInfo::to_string() const {
-    return "";
-}
-
 std::uint32_t IRowInfo::get_seq_counter() const {
     return m_seq_counter;
 }

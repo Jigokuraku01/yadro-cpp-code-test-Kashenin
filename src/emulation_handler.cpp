@@ -33,6 +33,8 @@ void EmulationHandler::run_emulation() {
                 m_repository.get_start_info().get_end_time() -
                 table_info.get_last_occupied_start_time();
             table_info.add_occupied_time(occupied_time);
+            table_info.add_money_spent(
+                m_repository.calculate_total_price(occupied_time));
             m_repository.remove_user_table(user_name);
         }
 
@@ -55,14 +57,7 @@ void EmulationHandler::show_repository_history() {
     auto tables = m_repository.get_tables();
     for (const auto& [table_id, table_info] : tables) {
         m_writer->write_line(std::format(
-            "{} {} {}", table_id,
-            calculate_total_price(table_info.get_total_occupied_time()),
+            "{} {} {}", table_id, table_info.get_total_money_spent(),
             TimeFormatter::format_time(table_info.get_total_occupied_time())));
     }
-}
-
-std::uint32_t
-EmulationHandler::calculate_total_price(std::uint32_t time) const {
-    const auto& start_info = m_repository.get_start_info();
-    return ((time + 59) / 60) * start_info.get_hour_price();
 }

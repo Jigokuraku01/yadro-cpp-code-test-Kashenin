@@ -25,11 +25,16 @@ class TableInfo {
     [[nodiscard]]
     std::uint32_t get_last_occupied_start_time() const;
 
+    void add_money_spent(std::uint32_t amount);
+    [[nodiscard]]
+    std::uint32_t get_total_money_spent() const;
+
   private:
     std::string m_user_name;
     bool m_is_occupied = false;
     std::uint32_t m_total_occupied_time = 0;
     std::uint32_t m_last_occupied_start_time = 0;
+    std::uint32_t m_total_money_spent = 0;
 };
 
 struct compare_row_info {
@@ -53,12 +58,15 @@ class Repository {
 
     void add_waiting_user(const std::string& user_name);
     void remove_waiting_user();
+    void remove_waiting_user_by_name(const std::string_view& user_name);
     [[nodiscard]]
     bool has_waiting_users() const;
     [[nodiscard]]
     std::string get_next_waiting_user() const;
     [[nodiscard]]
     bool is_queue_full() const;
+    [[nodiscard]]
+    bool is_user_waiting(const std::string& user_name) const;
 
     [[nodiscard]]
     bool has_free_tables() const;
@@ -88,6 +96,9 @@ class Repository {
     std::uint32_t get_user_table_id(const std::string& user_name) const;
 
     std::set<std::string>& get_current_users();
+
+    [[nodiscard]]
+    std::uint32_t calculate_total_price(std::uint32_t time) const;
 
   private:
     //table_id -> TableInfo

@@ -15,7 +15,7 @@ class IRowInfo {
     std::uint32_t get_time() const;
 
     [[nodiscard]]
-    virtual std::string to_string() const;
+    virtual std::string to_string() const = 0;
 
     [[nodiscard]]
     std::uint32_t get_seq_counter() const;
