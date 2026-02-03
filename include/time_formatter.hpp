@@ -5,6 +5,9 @@
 class TimeFormatter {
   public:
     TimeFormatter() = delete;
-    std::string static format_time(std::uint32_t time_in_minutes);
-    std::uint32_t static parse_time(const std::string& time_str);
+    static std::string format_time(std::uint32_t time_in_minutes);
+    static std::uint32_t parse_time(const std::string& time_str);
+
+  private:
+    static bool is_digit_only(const std::string_view& str);
 };
