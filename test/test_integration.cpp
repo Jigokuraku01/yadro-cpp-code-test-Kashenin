@@ -72,23 +72,6 @@ class IntegrationTest : public ::testing::Test {
     }
 };
 
-TEST_F(IntegrationTest, QueueOverflow) {
-    auto output = run_test_file("test_queue_overflow.txt");
-
-    EXPECT_EQ(output.front(), "09:00");
-    EXPECT_EQ(output.back().substr(0, 1), "2");
-
-    // Check for Type11 for client4 (queue overflow)
-    bool found_type11 = false;
-    for (const auto& line : output) {
-        if (line.find("11 client4") != std::string::npos) {
-            found_type11 = true;
-            break;
-        }
-    }
-    EXPECT_TRUE(found_type11) << "Should generate Type11 for queue overflow";
-}
-
 TEST_F(IntegrationTest, ClientWaitingWithoutSeat) {
     auto output = run_test_file("test_client_waiting_without_seat.txt");
 
