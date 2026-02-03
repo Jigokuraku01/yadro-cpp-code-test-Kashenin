@@ -1,5 +1,6 @@
 #include "console_parser.hpp"
 
+#include "config.hpp"
 #include "my_exception.hpp"
 #include <stdexcept>
 
@@ -14,7 +15,8 @@ std::string ConsoleParsedInfo::get_parsed_filename() const {
 ConsoleParsedInfo ConsoleParser::parse(const std::vector<std::string>& args) {
     ConsoleParsedInfo parsed_info;
     if (args.size() != 1) {
-        throw MyException(1, "Invalid number of arguments");
+        throw MyException(Config::universal_error_code,
+                          "Invalid number of arguments");
     }
 
     parsed_info.set_parsed_filename(args[0]);

@@ -3,7 +3,7 @@
 #include "ireader.hpp"
 #include <fstream>
 #include <memory>
-class FileReader : IReader {
+class FileReader : public IReader {
   public:
     explicit FileReader(std::ifstream&& input_file);
     ~FileReader() override = default;
