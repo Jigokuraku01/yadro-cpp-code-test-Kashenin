@@ -6,7 +6,8 @@
 #include <format>
 #include <memory>
 
-IInputRowInfo::IInputRowInfo(std::uint32_t row_type) : IRowInfo(row_type) {
+IInputRowInfo::IInputRowInfo(std::uint32_t row_type, std::uint32_t time)
+    : IRowInfo(row_type, time) {
 }
 std::shared_ptr<IRowInfo>
 IInputRowInfo::generate_exception_row(std::uint32_t time, std::string message) {
@@ -14,11 +15,7 @@ IInputRowInfo::generate_exception_row(std::uint32_t time, std::string message) {
 }
 
 Type1RowInfo::Type1RowInfo(std::uint32_t time, std::string user_name)
-    : IInputRowInfo(1), m_time(time), m_user_name(std::move(user_name)) {
-}
-
-std::uint32_t Type1RowInfo::get_time() const {
-    return m_time;
+    : IInputRowInfo(1, time), m_user_name(std::move(user_name)) {
 }
 
 std::string Type1RowInfo::get_user_name() const {
@@ -32,11 +29,8 @@ std::string Type1RowInfo::to_string() const {
 
 Type2RowInfo::Type2RowInfo(std::uint32_t time, std::string user_name,
                            std::uint32_t table_id)
-    : IInputRowInfo(2), m_time(time), m_user_name(std::move(user_name)),
+    : IInputRowInfo(2, time), m_user_name(std::move(user_name)),
       m_table_id(table_id) {
-}
-std::uint32_t Type2RowInfo::get_time() const {
-    return m_time;
 }
 std::string Type2RowInfo::get_user_name() const {
     return m_user_name;
@@ -52,10 +46,7 @@ std::string Type2RowInfo::to_string() const {
 }
 
 Type3RowInfo::Type3RowInfo(std::uint32_t time, std::string user_name)
-    : IInputRowInfo(3), m_time(time), m_user_name(std::move(user_name)) {
-}
-std::uint32_t Type3RowInfo::get_time() const {
-    return m_time;
+    : IInputRowInfo(3, time), m_user_name(std::move(user_name)) {
 }
 
 std::string Type3RowInfo::get_user_name() const {
@@ -68,10 +59,7 @@ std::string Type3RowInfo::to_string() const {
 }
 
 Type4RowInfo::Type4RowInfo(std::uint32_t time, std::string user_name)
-    : IInputRowInfo(4), m_time(time), m_user_name(std::move(user_name)) {
-}
-std::uint32_t Type4RowInfo::get_time() const {
-    return m_time;
+    : IInputRowInfo(4, time), m_user_name(std::move(user_name)) {
 }
 
 std::string Type4RowInfo::get_user_name() const {

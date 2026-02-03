@@ -43,11 +43,11 @@ void EmulationHandler::run_emulation() {
 }
 
 void EmulationHandler::show_repository_history() {
-    auto history = m_repository.get_history();
     m_writer->write_line(TimeFormatter::format_time(
         m_repository.get_start_info().get_start_time()));
+    auto history = m_repository.get_history();
     while (!history.empty()) {
-        m_writer->write_line(history.front()->to_string());
+        m_writer->write_line(history.top()->to_string());
         history.pop();
     }
     m_writer->write_line(TimeFormatter::format_time(

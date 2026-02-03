@@ -4,10 +4,7 @@
 #include <format>
 
 Type11RowInfo::Type11RowInfo(std::uint32_t time, std::string user_name)
-    : IRowInfo(11), m_time(time), m_user_name(std::move(user_name)) {
-}
-std::uint32_t Type11RowInfo::get_time() const {
-    return m_time;
+    : IRowInfo(11, time), m_user_name(std::move(user_name)) {
 }
 std::string Type11RowInfo::get_user_name() const {
     return m_user_name;
@@ -20,11 +17,8 @@ std::string Type11RowInfo::to_string() const {
 
 Type12RowInfo::Type12RowInfo(std::uint32_t time, std::string user_name,
                              std::uint32_t table_id)
-    : IRowInfo(12), m_time(time), m_user_name(std::move(user_name)),
+    : IRowInfo(12, time), m_user_name(std::move(user_name)),
       m_table_id(table_id) {
-}
-std::uint32_t Type12RowInfo::get_time() const {
-    return m_time;
 }
 std::string Type12RowInfo::get_user_name() const {
     return m_user_name;
@@ -39,10 +33,7 @@ std::string Type12RowInfo::to_string() const {
 }
 
 Type13RowInfo::Type13RowInfo(std::uint32_t time, std::string error_message)
-    : IRowInfo(13), m_time(time), m_error_message(std::move(error_message)) {
-}
-std::uint32_t Type13RowInfo::get_time() const {
-    return m_time;
+    : IRowInfo(13, time), m_error_message(std::move(error_message)) {
 }
 std::string Type13RowInfo::get_error_message() const {
     return m_error_message;

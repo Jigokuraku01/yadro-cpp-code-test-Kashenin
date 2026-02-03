@@ -4,7 +4,7 @@
 
 class IInputRowInfo : public IRowInfo {
   public:
-    explicit IInputRowInfo(std::uint32_t row_type);
+    explicit IInputRowInfo(std::uint32_t row_type, std::uint32_t time);
     virtual void do_step(Repository& cur_repo) = 0;
     [[nodiscard]]
     static std::shared_ptr<IRowInfo>
@@ -15,9 +15,6 @@ class Type1RowInfo : public IInputRowInfo {
   public:
     Type1RowInfo(std::uint32_t time, std::string user_name);
     void do_step(Repository& cur_repo) override;
-
-    [[nodiscard]]
-    std::uint32_t get_time() const;
     [[nodiscard]]
     std::string get_user_name() const;
 
@@ -25,7 +22,6 @@ class Type1RowInfo : public IInputRowInfo {
     std::string to_string() const override;
 
   private:
-    std::uint32_t m_time;
     std::string m_user_name;
 };
 
@@ -34,9 +30,6 @@ class Type2RowInfo : public IInputRowInfo {
     Type2RowInfo(std::uint32_t time, std::string user_name,
                  std::uint32_t table_id);
     void do_step(Repository& cur_repo) override;
-
-    [[nodiscard]]
-    std::uint32_t get_time() const;
     [[nodiscard]]
     std::string get_user_name() const;
     [[nodiscard]]
@@ -46,7 +39,6 @@ class Type2RowInfo : public IInputRowInfo {
     std::string to_string() const override;
 
   private:
-    std::uint32_t m_time;
     std::string m_user_name;
     std::uint32_t m_table_id;
 };
@@ -55,9 +47,6 @@ class Type3RowInfo : public IInputRowInfo {
   public:
     Type3RowInfo(std::uint32_t time, std::string user_name);
     void do_step(Repository& cur_repo) override;
-
-    [[nodiscard]]
-    std::uint32_t get_time() const;
     [[nodiscard]]
     std::string get_user_name() const;
 
@@ -65,7 +54,6 @@ class Type3RowInfo : public IInputRowInfo {
     std::string to_string() const override;
 
   private:
-    std::uint32_t m_time;
     std::string m_user_name;
 };
 
@@ -73,9 +61,6 @@ class Type4RowInfo : public IInputRowInfo {
   public:
     Type4RowInfo(std::uint32_t time, std::string user_name);
     void do_step(Repository& cur_repo) override;
-
-    [[nodiscard]]
-    std::uint32_t get_time() const;
     [[nodiscard]]
     std::string get_user_name() const;
 
@@ -83,6 +68,5 @@ class Type4RowInfo : public IInputRowInfo {
     std::string to_string() const override;
 
   private:
-    std::uint32_t m_time;
     std::string m_user_name;
 };

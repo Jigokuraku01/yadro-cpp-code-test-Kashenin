@@ -104,7 +104,9 @@ void Repository::add_history_entry(std::shared_ptr<IRowInfo> row_info) {
     m_history.push(std::move(row_info));
 }
 
-std::queue<std::shared_ptr<IRowInfo>> Repository::get_history() const {
+std::priority_queue<std::shared_ptr<IRowInfo>,
+                    std::vector<std::shared_ptr<IRowInfo>>, compare_row_info>
+Repository::get_history() const {
     return m_history;
 }
 

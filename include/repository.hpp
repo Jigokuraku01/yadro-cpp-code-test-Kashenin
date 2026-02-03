@@ -32,6 +32,13 @@ class TableInfo {
     std::uint32_t m_last_occupied_start_time = 0;
 };
 
+struct compare_row_info {
+    bool operator()(const std::shared_ptr<IRowInfo>& lhs,
+                    const std::shared_ptr<IRowInfo>& rhs) const {
+        return lhs->get_time() > rhs->get_time();
+    }
+};
+
 class Repository {
   public:
     explicit Repository(StartInfo start_info);
@@ -66,7 +73,9 @@ class Repository {
 
     void add_history_entry(std::shared_ptr<IRowInfo> row_info);
     [[nodiscard]]
-    std::queue<std::shared_ptr<IRowInfo>> get_history() const;
+    std::priority_queue<std::shared_ptr<IRowInfo>,
+                        std::vector<std::shared_ptr<IRowInfo>>,
+                        compare_row_info> get_history() const;
 
     void add_user_table(const std::string& user_name, std::uint32_t table_id);
     void remove_user_table(const std::string& user_name);
@@ -85,5 +94,9 @@ class Repository {
     StartInfo m_start_info;
     std::queue<std::string> m_waiting_users;
     std::set<std::string> m_current_users;
-    std::queue<std::shared_ptr<IRowInfo>> m_history;
+
+    std::priority_queue<std::shared_ptr<IRowInfo>,
+                        std::vector<std::shared_ptr<IRowInfo>>,
+                        compare_row_info>
+        m_history;
 };

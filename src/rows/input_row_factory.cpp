@@ -19,10 +19,14 @@ InputRowFactory::create_row(const std::string& line) {
         }
 
         std::uint32_t parsed_time = TimeFormatter::parse_time(time);
+        std::string remaining;
         switch (row_type) {
             case 1: {
                 std::string user_name;
                 if (!(stream >> user_name)) {
+                    throw MyException(Config::format_error_code, line);
+                }
+                if (stream >> remaining) {
                     throw MyException(Config::format_error_code, line);
                 }
                 return std::make_shared<Type1RowInfo>(parsed_time, user_name);
@@ -33,6 +37,9 @@ InputRowFactory::create_row(const std::string& line) {
                 if (!(stream >> user_name >> table_id)) {
                     throw MyException(Config::format_error_code, line);
                 }
+                if (stream >> remaining) {
+                    throw MyException(Config::format_error_code, line);
+                }
                 return std::make_shared<Type2RowInfo>(parsed_time, user_name,
                                                       table_id);
             }
@@ -41,11 +48,17 @@ InputRowFactory::create_row(const std::string& line) {
                 if (!(stream >> user_name)) {
                     throw MyException(Config::format_error_code, line);
                 }
+                if (stream >> remaining) {
+                    throw MyException(Config::format_error_code, line);
+                }
                 return std::make_shared<Type3RowInfo>(parsed_time, user_name);
             }
             case 4: {
                 std::string user_name;
                 if (!(stream >> user_name)) {
+                    throw MyException(Config::format_error_code, line);
+                }
+                if (stream >> remaining) {
                     throw MyException(Config::format_error_code, line);
                 }
                 return std::make_shared<Type4RowInfo>(parsed_time, user_name);
