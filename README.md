@@ -11,8 +11,9 @@
 
 ## Требования
 - Стандарт: C++20
-- Компилятор: gcc или clang (Linux), mingw/cygwin (Windows)
+- Компилятор: clang++-18 (используется по умолчанию в CMake)
 - CMake 3.15+ (рекомендуемая система сборки)
+- Сборка в Debug с санитайзерами (Address/Undefined/Leak)
 
 Дополнительно (необязательно):
 - Google Test (для unit-тестов)
@@ -67,9 +68,19 @@ sudo dnf install -y clang-tools-extra clang
 ## Сборка (CMake)
 
 ```bash
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build --parallel
 ```
+
+Если нужно явно указать компилятор:
+```bash
+CC=/usr/bin/clang-18 CXX=/usr/bin/clang++-18 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+```
+
+Используемые флаги сборки (из CMake):
+- -O0 -g
+- -Werror -Wall -Wextra -Wpedantic -Wconversion -Wcast-align -Wcast-qual -pedantic-errors
+- -fsanitize=address -fsanitize=undefined -fsanitize=leak -fno-omit-frame-pointer -fno-sanitize-recover=all
 
 После сборки исполняемый файл находится в папке build.
 
