@@ -72,6 +72,24 @@ class IntegrationTest : public ::testing::Test {
     }
 };
 
+TEST_F(IntegrationTest, QueueFull) {
+    auto output = run_test_file("test_queue_full.txt");
+
+    // With 2 tables, queue can hold max 2 clients
+    // client1 and client2 occupy tables
+    // client3 and client4 wait in queue
+    // client5 tries to wait but queue is full -> Type11 immediately
+    bool found_type11_client5 = false;
+    for (const auto& line : output) {
+        if (line.find("09:16 11 client5") != std::string::npos) {
+            found_type11_client5 = true;
+            break;
+        }
+    }
+    EXPECT_TRUE(found_type11_client5)
+        << "client5 should get Type11 when trying to join full queue";
+}
+
 TEST_F(IntegrationTest, ClientWaitingWithoutSeat) {
     auto output = run_test_file("test_client_waiting_without_seat.txt");
 
