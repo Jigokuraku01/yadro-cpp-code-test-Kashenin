@@ -1,0 +1,59 @@
+
+BasedOnStyle: LLVM
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 80
+PointerAlignment: Left
+AllowShortIfStatementsOnASingleLine: false
+BreakBeforeBraces: Custom
+
+
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+
+BraceWrapping:
+    AfterClass:       false
+    AfterControlStatement: false
+    AfterEnum:        false
+    AfterFunction:    false
+    AfterNamespace:   false
+    AfterObjCDeclaration: true
+    AfterStruct:      false
+    AfterUnion:       false
+    BeforeCatch:      true
+    BeforeElse:       true
+    BeforeLambdaBody: true
+    IndentBraces:     false
+    AfterCaseLabel: false
+
+
+IndentCaseLabels: true
+
+IndentCaseBlocks: false
+
+AllowAllParametersOfDeclarationOnNextLine: false
+
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: true
+
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+SpacesBeforeTrailingComments: 1
+SpaceAfterCStyleCast: true
+SpaceBeforeParens: ControlStatements
+
+IncludeIsMainRegex: '.*'
+SortIncludes: true
+
+IncludeBlocks: Regroup
+IncludeCategories:
+    - Regex:           '^<.*\.h>'
+      Priority:        1
+    - Regex:           '.*'
+      Priority:        2
+
+ReflowComments:    false

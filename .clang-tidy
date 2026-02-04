@@ -1,0 +1,66 @@
+---
+Checks: >
+    readability-*,
+    -readability-magic-numbers,
+    -readability-function-cognitive-complexity,
+    modernize-*,
+    bugprone-*,
+    -bugprone-easily-swappable-parameters,
+    google-*,
+    performance-*,
+    -performance-avoid-endl,
+    portability-*,
+    -modernize-use-trailing-return-type,
+    -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+    -cppcoreguidelines-owning-memory,
+    -modernize-use-std-print,
+    -suspicious-missing-comma,
+    -bugprone-suspicious-missing-comma,
+
+WarningsAsErrors: "*"
+HeaderFilterRegex: ".*"
+FormatStyle: file
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: lower_case
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+  - key: readability-identifier-naming.AliasCase
+    value: lower_case
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+    
+  - key: readability-indentation.IndentWidth
+    value: 4
+  - key: readability-container-size-empty.MinLines
+    value: 4
+  - key: llvm-indent-width
+    value: 4
+
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: 1
+  - key: llvm-line-length.Max
+    value: 80
+
+
+  - key: google-readability-casting.AllowedTypeCasts
+    value: "static_cast, dynamic_cast"
+  - key: google-readability-casting.PreferImplicitCasts
+    value: false
+
+  - key: modernize-use-noexcept.AddOverride
+    value: true
+  - key: google-explicit-constructor.AllowExplicitConversionFunctions
+    value: false
+
+  - key: modernize-raw-string-literal.DisallowedTypes
+    value: "malloc,free,new,delete,reinterpret_cast,const_cast"
+  - key: modernize-deprecated-headers.AllowCHeaders
+    value: false
+  - key: modernize-use-constexpr.MinLines
+    value: 1

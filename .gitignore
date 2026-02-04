@@ -12,8 +12,6 @@
 *.docx
 
 .vscode/
-.clang-format
-.clang-tidy
 
 
 # Precompiled Headers
