@@ -1,5 +1,6 @@
 #include "repository.hpp"
 
+#include "config.hpp"
 #include "my_exception.hpp"
 #include <algorithm>
 #include <string_view>
@@ -58,9 +59,11 @@ bool Repository::is_user_currently_in(const std::string& user_name) const {
 }
 void Repository::add_waiting_user(const std::string& user_name) {
     m_waiting_users.push(user_name);
+    m_waiting_users_set.insert(user_name);
 }
 void Repository::remove_waiting_user() {
     if (!m_waiting_users.empty()) {
+        m_waiting_users_set.erase(m_waiting_users.front());
         m_waiting_users.pop();
     }
 }
@@ -69,7 +72,8 @@ bool Repository::has_waiting_users() const {
 }
 std::string Repository::get_next_waiting_user() const {
     if (m_waiting_users.empty()) {
-        throw MyException(1, "No waiting users available");
+        throw MyException(Config::universal_error_code,
+                          "No waiting users available");
     }
     return m_waiting_users.front();
 }
@@ -142,14 +146,7 @@ std::uint32_t Repository::calculate_total_price(std::uint32_t time) const {
 }
 
 bool Repository::is_user_waiting(const std::string& user_name) const {
-    std::queue<std::string> temp_queue = m_waiting_users;
-    while (!temp_queue.empty()) {
-        if (temp_queue.front() == user_name) {
-            return true;
-        }
-        temp_queue.pop();
-    }
-    return false;
+    return m_waiting_users_set.contains(user_name);
 }
 
 void Repository::remove_waiting_user_by_name(

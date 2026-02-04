@@ -8,6 +8,7 @@
 #include <set>
 #include <string>
 #include <string_view>
+#include <unordered_set>
 class TableInfo {
   public:
     TableInfo() = default;
@@ -107,6 +108,8 @@ class Repository {
     std::map<std::string, std::uint32_t> m_user_table_map;
     StartInfo m_start_info;
     std::queue<std::string> m_waiting_users;
+    std::unordered_set<std::string> m_waiting_users_set;
+
     std::set<std::string> m_current_users;
 
     std::priority_queue<std::shared_ptr<IRowInfo>,
