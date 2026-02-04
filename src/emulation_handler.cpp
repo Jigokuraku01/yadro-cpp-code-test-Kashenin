@@ -28,7 +28,7 @@ void EmulationHandler::run_emulation() {
         if (m_repository.has_user_table(user_name)) {
             std::uint32_t table_id = m_repository.get_user_table_id(user_name);
             TableInfo& table_info = m_repository.get_tables().at(table_id);
-            table_info.set_occupied(false);
+            m_repository.mark_table_free(table_id);
             std::uint32_t occupied_time =
                 m_repository.get_start_info().get_end_time() -
                 table_info.get_last_occupied_start_time();

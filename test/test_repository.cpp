@@ -60,8 +60,7 @@ TEST_F(RepositoryTest, TableOperations) {
     EXPECT_TRUE(repo->is_table_free(2));
     EXPECT_TRUE(repo->is_table_free(3));
 
-    auto& tables = repo->get_tables();
-    tables.at(1).set_occupied(true);
+    repo->mark_table_occupied(1);
 
     EXPECT_FALSE(repo->is_table_free(1));
     EXPECT_TRUE(repo->is_table_free(2));
@@ -70,10 +69,9 @@ TEST_F(RepositoryTest, TableOperations) {
 TEST_F(RepositoryTest, HasFreeTables) {
     EXPECT_TRUE(repo->has_free_tables());
 
-    auto& tables = repo->get_tables();
-    tables.at(1).set_occupied(true);
-    tables.at(2).set_occupied(true);
-    tables.at(3).set_occupied(true);
+    repo->mark_table_occupied(1);
+    repo->mark_table_occupied(2);
+    repo->mark_table_occupied(3);
 
     EXPECT_FALSE(repo->has_free_tables());
 }

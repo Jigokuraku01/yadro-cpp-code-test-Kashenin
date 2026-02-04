@@ -101,6 +101,9 @@ class Repository {
     [[nodiscard]]
     std::uint32_t calculate_total_price(std::uint32_t time) const;
 
+    void mark_table_occupied(std::uint32_t table_id);
+    void mark_table_free(std::uint32_t table_id);
+
   private:
     //table_id -> TableInfo
     std::map<std::uint32_t, TableInfo> m_tables;
@@ -116,4 +119,6 @@ class Repository {
                         std::vector<std::shared_ptr<IRowInfo>>,
                         compare_row_info>
         m_history;
+
+    std::unordered_set<std::uint32_t> m_free_tables;
 };

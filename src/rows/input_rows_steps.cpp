@@ -44,7 +44,7 @@ void Type2RowInfo::do_step(Repository& cur_repo) {
     if (cur_repo.has_user_table(get_user_name())) {
         std::uint32_t table_id = cur_repo.get_user_table_id(get_user_name());
         TableInfo& table_info = cur_repo.get_tables().at(table_id);
-        table_info.set_occupied(false);
+        cur_repo.mark_table_free(table_id);
         std::uint32_t occupied_time =
             get_time() - table_info.get_last_occupied_start_time();
         table_info.add_occupied_time(occupied_time);
@@ -59,7 +59,7 @@ void Type2RowInfo::do_step(Repository& cur_repo) {
     cur_repo.add_user_table(get_user_name(), get_table_id());
     TableInfo& table_info = cur_repo.get_tables().at(get_table_id());
     table_info.set_user_name(get_user_name());
-    table_info.set_occupied(true);
+    cur_repo.mark_table_occupied(get_table_id());
     table_info.set_last_occupied_start_time(get_time());
 }
 
@@ -103,7 +103,7 @@ void Type4RowInfo::do_step(Repository& cur_repo) {
 
     std::uint32_t table_id = cur_repo.get_user_table_id(get_user_name());
     TableInfo& table_info = cur_repo.get_tables().at(table_id);
-    table_info.set_occupied(false);
+    cur_repo.mark_table_free(table_id);
     std::uint32_t occupied_time =
         get_time() - table_info.get_last_occupied_start_time();
     table_info.add_occupied_time(occupied_time);
@@ -115,7 +115,7 @@ void Type4RowInfo::do_step(Repository& cur_repo) {
         cur_repo.remove_waiting_user();
         cur_repo.add_user_table(next_user, table_id);
         table_info.set_user_name(next_user);
-        table_info.set_occupied(true);
+        cur_repo.mark_table_occupied(table_id);
         table_info.set_last_occupied_start_time(get_time());
 
         cur_repo.add_history_entry(

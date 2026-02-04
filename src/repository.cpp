@@ -41,6 +41,7 @@ std::uint32_t TableInfo::get_total_money_spent() const {
 Repository::Repository(StartInfo start_info) : m_start_info(start_info) {
     for (std::uint32_t i = 1; i <= start_info.get_tables_cnt(); ++i) {
         m_tables[i] = TableInfo();
+        m_free_tables.insert(i);
     }
 }
 
@@ -95,8 +96,7 @@ bool Repository::is_table_free(std::uint32_t table_id) const {
 }
 
 bool Repository::has_free_tables() const {
-    return std::ranges::any_of(m_tables, [](const auto& table_pair)
-                               { return !table_pair.second.is_occupied(); });
+    return !m_free_tables.empty();
 }
 
 bool Repository::is_queue_full() const {
@@ -159,4 +159,14 @@ void Repository::remove_waiting_user_by_name(
         m_waiting_users.pop();
     }
     m_waiting_users = std::move(temp_queue);
+}
+
+void Repository::mark_table_occupied(std::uint32_t table_id) {
+    m_tables.at(table_id).set_occupied(true);
+    m_free_tables.erase(table_id);
+}
+
+void Repository::mark_table_free(std::uint32_t table_id) {
+    m_tables.at(table_id).set_occupied(false);
+    m_free_tables.insert(table_id);
 }
