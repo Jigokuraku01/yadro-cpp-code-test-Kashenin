@@ -19,6 +19,49 @@
 - clang-tidy (статический анализ)
 - clang-format (форматирование)
 
+### Установка Google Test
+
+Ubuntu/Debian:
+```bash
+sudo apt update
+sudo apt install -y libgtest-dev
+```
+
+На Ubuntu/Debian библиотека ставится в виде исходников. Нужно собрать её один раз:
+```bash
+cd /usr/src/gtest
+sudo cmake -S . -B build
+sudo cmake --build build
+```
+
+Arch:
+```bash
+sudo pacman -S gtest
+```
+
+Fedora:
+```bash
+sudo dnf install -y gtest gtest-devel
+```
+
+### Установка clang-tidy и clang-format
+
+Ubuntu/Debian:
+```bash
+sudo apt update
+sudo apt install -y clang-tidy clang-format
+```
+
+Arch:
+```bash
+sudo pacman -S clang
+```
+
+Fedora:
+```bash
+sudo dnf install -y clang-tools-extra clang
+```
+
 ---
 
 ## Сборка (CMake)
