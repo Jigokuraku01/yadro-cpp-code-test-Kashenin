@@ -26,8 +26,9 @@ void EmulationHandler::run_emulation() {
     auto cur_users = m_repository.get_current_users();
     for (const auto& user_name : cur_users) {
         if (m_repository.has_user_table(user_name)) {
-            m_repository.remove_user_and_free_table(
+            m_repository.free_table_from_user(
                 user_name, m_repository.get_start_info().get_end_time());
+            m_repository.remove_current_user(user_name);
         }
 
         m_repository.remove_current_user(user_name);

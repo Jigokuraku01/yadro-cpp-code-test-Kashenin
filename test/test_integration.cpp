@@ -72,106 +72,182 @@ class IntegrationTest : public ::testing::Test {
     }
 };
 
+TEST_F(IntegrationTest, MainTest) {
+    auto output = run_test_file("test.txt");
+
+    std::vector<std::string> expected = {"09:00",
+                                         "00:00 1 client1",
+                                         "00:00 13 NotOpenYet",
+                                         "08:48 1 client1",
+                                         "08:48 13 NotOpenYet",
+                                         "09:41 1 client1",
+                                         "09:48 1 client2",
+                                         "09:52 3 client1",
+                                         "09:52 13 ICanWaitNoLonger!",
+                                         "09:54 2 client1 1",
+                                         "10:25 2 client2 2",
+                                         "10:58 1 client3",
+                                         "10:59 2 client3 3",
+                                         "11:30 1 client4",
+                                         "11:35 2 client4 2",
+                                         "11:35 13 PlaceIsBusy",
+                                         "11:45 3 client4",
+                                         "12:33 4 client1",
+                                         "12:33 12 client4 1",
+                                         "12:43 4 client2",
+                                         "15:52 4 client4",
+                                         "19:00 11 client3",
+                                         "22:00 1 client5",
+                                         "22:00 13 NotOpenYet",
+                                         "19:00",
+                                         "1 70 05:58",
+                                         "2 30 02:18",
+                                         "3 90 08:01"};
+
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
+    }
+}
+
 TEST_F(IntegrationTest, QueueFull) {
     auto output = run_test_file("test_queue_full.txt");
 
-    // With 2 tables, queue can hold max 2 clients
-    // client1 and client2 occupy tables
-    // client3 and client4 wait in queue
-    // client5 tries to wait but queue is full -> Type11 immediately
-    bool found_type11_client5 = false;
-    for (const auto& line : output) {
-        if (line.find("09:16 11 client5") != std::string::npos) {
-            found_type11_client5 = true;
-            break;
-        }
+    std::vector<std::string> expected = {"09:00",
+                                         "09:00 1 client1",
+                                         "09:01 2 client1 1",
+                                         "09:02 1 client2",
+                                         "09:03 2 client2 2",
+                                         "09:05 1 client3",
+                                         "09:06 3 client3",
+                                         "09:10 1 client4",
+                                         "09:11 3 client4",
+                                         "09:15 1 client5",
+                                         "09:16 3 client5",
+                                         "09:16 11 client5",
+                                         "19:00 11 client1",
+                                         "19:00 11 client2",
+                                         "19:00 11 client3",
+                                         "19:00 11 client4",
+                                         "19:00",
+                                         "1 100 09:59",
+                                         "2 100 09:57"};
+
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
     }
-    EXPECT_TRUE(found_type11_client5)
-        << "client5 should get Type11 when trying to join full queue";
 }
 
 TEST_F(IntegrationTest, ClientWaitingWithoutSeat) {
-    auto output = run_test_file("test_client_waiting_without_seat.txt");
+    auto output = run_test_file("test_client_waiting_with_seat.txt");
 
-    bool found_error = false;
-    for (const auto& line : output) {
-        if (line.find("13 ClientAlreadyHasTable") != std::string::npos) {
-            found_error = true;
-            break;
-        }
+    std::vector<std::string> expected = {"09:00",
+                                         "09:00 1 alice",
+                                         "09:05 1 bob",
+                                         "09:06 2 bob 1",
+                                         "09:10 1 charlie",
+                                         "09:11 2 charlie 2",
+                                         "09:15 3 alice",
+                                         "09:20 4 bob",
+                                         "09:20 12 alice 1",
+                                         "09:25 3 charlie",
+                                         "09:25 13 ClientAlreadyHasTable",
+                                         "19:00 11 alice",
+                                         "19:00 11 charlie",
+                                         "19:00",
+                                         "1 110 09:54",
+                                         "2 100 09:49"};
+
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
     }
-    EXPECT_TRUE(found_error)
-        << "Should generate error when client waits without seat";
 }
 
 TEST_F(IntegrationTest, UnknownTable) {
     auto output = run_test_file("test_unknown_table.txt");
 
-    bool found_table_error = false;
-    for (const auto& line : output) {
-        if (line.find("13") != std::string::npos &&
-            line.find("09:05") != std::string::npos) {
-            found_table_error = true;
-            break;
-        }
+    std::vector<std::string> expected = {
+        "09:00",           "09:00 1 alice",
+        "09:05 2 alice 5", "09:05 13 UnknownTable",
+        "09:10 2 alice 1", "09:15 4 alice",
+        "19:00",           "1 10 00:05",
+        "2 0 00:00"};
+
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
     }
-    EXPECT_TRUE(found_table_error) << "Should generate error for unknown table";
 }
 
 TEST_F(IntegrationTest, EndOfDaySorting) {
     auto output = run_test_file("test_end_of_day_sorting.txt");
 
-    std::vector<std::string> type11_events;
-    for (const auto& line : output) {
-        if (line.find("19:00 11") != std::string::npos) {
-            type11_events.push_back(line);
-        }
-    }
+    std::vector<std::string> expected = {
+        "09:00",           "09:00 1 dave",      "09:01 2 dave 1",
+        "09:05 1 charlie", "09:06 2 charlie 2", "09:10 1 alice",
+        "09:11 2 alice 3", "09:15 1 bob",       "19:00 11 alice",
+        "19:00 11 bob",    "19:00 11 charlie",  "19:00 11 dave",
+        "19:00",           "1 100 09:59",       "2 100 09:54",
+        "3 100 09:49"};
 
-    // Check alphabetical order
-    if (type11_events.size() > 1) {
-        for (size_t i = 1; i < type11_events.size(); ++i) {
-            size_t pos1 = type11_events[i - 1].rfind(' ');
-            size_t pos2 = type11_events[i].rfind(' ');
-            std::string user1 = type11_events[i - 1].substr(pos1 + 1);
-            std::string user2 = type11_events[i].substr(pos2 + 1);
-            EXPECT_LT(user1, user2)
-                << "Type11 events should be in alphabetical order";
-        }
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
     }
 }
 
 TEST_F(IntegrationTest, OutsideWorkingHours) {
     auto output = run_test_file("test_outside_hours.txt");
 
-    int not_open_yet_count = 0;
-    for (const auto& line : output) {
-        if (line.find("13 NotOpenYet") != std::string::npos) {
-            not_open_yet_count++;
-        }
-    }
+    std::vector<std::string> expected = {"09:00",
+                                         "08:45 1 alice",
+                                         "08:45 13 NotOpenYet",
+                                         "09:00 1 bob",
+                                         "09:05 2 bob 1",
+                                         "19:00 1 charlie",
+                                         "19:00 13 NotOpenYet",
+                                         "19:00 11 bob",
+                                         "19:05 1 dave",
+                                         "19:05 13 NotOpenYet",
+                                         "19:00",
+                                         "1 100 09:55",
+                                         "2 0 00:00"};
 
-    EXPECT_GE(not_open_yet_count, 2)
-        << "Should have at least 2 NotOpenYet errors";
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
+    }
 }
 
 TEST_F(IntegrationTest, TableSwitching) {
     auto output = run_test_file("test_table_switching.txt");
 
-    bool found_2alice2 = false;
-    bool found_2alice3 = false;
+    std::vector<std::string> expected = {"09:00",           "09:00 1 alice",
+                                         "09:05 2 alice 1", "09:30 2 alice 2",
+                                         "10:00 2 alice 3", "10:30 4 alice",
+                                         "19:00",           "1 10 00:25",
+                                         "2 10 00:30",      "3 10 00:30"};
 
-    for (const auto& line : output) {
-        if (line.find("2 alice 2") != std::string::npos) {
-            found_2alice2 = true;
-        }
-        if (line.find("2 alice 3") != std::string::npos) {
-            found_2alice3 = true;
-        }
+    ASSERT_EQ(output.size(), expected.size())
+        << "Output should have exactly " << expected.size() << " lines";
+
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(output[i], expected[i]) << "Line " << (i + 1) << " mismatch";
     }
-
-    EXPECT_TRUE(found_2alice2) << "alice should move to table 2";
-    EXPECT_TRUE(found_2alice3) << "alice should move to table 3";
 }
 
 TEST_F(IntegrationTest, BasicScenario) {

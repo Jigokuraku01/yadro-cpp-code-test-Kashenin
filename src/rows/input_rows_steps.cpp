@@ -42,8 +42,7 @@ void Type2RowInfo::do_step(Repository& cur_repo) {
     }
 
     if (cur_repo.has_user_table(get_user_name())) {
-        cur_repo.remove_user_and_free_table(get_user_name(), get_time());
-        cur_repo.add_current_user(get_user_name());
+        cur_repo.free_table_from_user(get_user_name(), get_time());
     }
 
     if (cur_repo.is_user_waiting(get_user_name())) {
@@ -110,7 +109,8 @@ void Type4RowInfo::do_step(Repository& cur_repo) {
     }
     std::uint32_t table_id = cur_repo.get_user_table_id(get_user_name());
     TableInfo& table_info = cur_repo.get_tables().at(table_id);
-    cur_repo.remove_user_and_free_table(get_user_name(), get_time());
+    cur_repo.free_table_from_user(get_user_name(), get_time());
+    cur_repo.remove_current_user(get_user_name());
 
     if (cur_repo.has_waiting_users()) {
         std::string next_user = cur_repo.get_next_waiting_user();

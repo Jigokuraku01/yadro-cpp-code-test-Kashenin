@@ -171,8 +171,8 @@ void Repository::mark_table_free(std::uint32_t table_id) {
     m_free_tables.insert(table_id);
 }
 
-void Repository::remove_user_and_free_table(const std::string& user_name,
-                                            std::uint32_t time) {
+void Repository::free_table_from_user(const std::string& user_name,
+                                      std::uint32_t time) {
     if (has_user_table(user_name)) {
         std::uint32_t table_id = get_user_table_id(user_name);
         TableInfo& table_info = m_tables.at(table_id);
@@ -183,5 +183,4 @@ void Repository::remove_user_and_free_table(const std::string& user_name,
         table_info.add_money_spent(calculate_total_price(occupied_time));
         remove_user_table(user_name);
     }
-    remove_current_user(user_name);
 }
