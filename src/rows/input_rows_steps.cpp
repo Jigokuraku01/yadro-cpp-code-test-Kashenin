@@ -43,6 +43,7 @@ void Type2RowInfo::do_step(Repository& cur_repo) {
 
     if (cur_repo.has_user_table(get_user_name())) {
         cur_repo.remove_user_and_free_table(get_user_name(), get_time());
+        cur_repo.add_current_user(get_user_name());
     }
 
     if (cur_repo.is_user_waiting(get_user_name())) {
@@ -85,6 +86,8 @@ void Type3RowInfo::do_step(Repository& cur_repo) {
     if (cur_repo.is_queue_full()) {
         cur_repo.add_history_entry(
             std::make_shared<Type11RowInfo>(get_time(), get_user_name()));
+        cur_repo.remove_current_user(get_user_name());
+
         return;
     }
     if (!cur_repo.is_user_waiting(get_user_name())) {
