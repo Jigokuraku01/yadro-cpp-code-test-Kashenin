@@ -42,15 +42,7 @@ void Type2RowInfo::do_step(Repository& cur_repo) {
     }
 
     if (cur_repo.has_user_table(get_user_name())) {
-        std::uint32_t table_id = cur_repo.get_user_table_id(get_user_name());
-        TableInfo& table_info = cur_repo.get_tables().at(table_id);
-        cur_repo.mark_table_free(table_id);
-        std::uint32_t occupied_time =
-            get_time() - table_info.get_last_occupied_start_time();
-        table_info.add_occupied_time(occupied_time);
-        table_info.add_money_spent(
-            cur_repo.calculate_total_price(occupied_time));
-        cur_repo.remove_user_table(get_user_name());
+        cur_repo.remove_user_and_free_table(get_user_name(), get_time());
     }
 
     if (cur_repo.is_user_waiting(get_user_name())) {
@@ -76,10 +68,18 @@ void Type3RowInfo::do_step(Repository& cur_repo) {
             IInputRowInfo::generate_exception_row(get_time(), "ClientUnknown"));
         return;
     }
-    if (cur_repo.has_free_tables() ||
-        cur_repo.has_user_table(get_user_name())) {
+    if (cur_repo.has_free_tables()) {
         cur_repo.add_history_entry(IInputRowInfo::generate_exception_row(
             get_time(), "ICanWaitNoLonger!"));
+        return;
+    }
+
+    if (cur_repo.has_user_table(get_user_name())) {
+        //Вот тут я не знаю что делать и какую ошибку кидать.
+        // Наверное логично было бы ICanWaitNoLonger, но это вроде не специфицировано
+        // Поэтому я буду выдавать ошибку ClientAlreadyHasTable
+        cur_repo.add_history_entry(IInputRowInfo::generate_exception_row(
+            get_time(), "ClientAlreadyHasTable"));
         return;
     }
     if (cur_repo.is_queue_full()) {
@@ -105,15 +105,9 @@ void Type4RowInfo::do_step(Repository& cur_repo) {
             get_time(), "ClientNotAtTable"));
         return;
     }
-
     std::uint32_t table_id = cur_repo.get_user_table_id(get_user_name());
     TableInfo& table_info = cur_repo.get_tables().at(table_id);
-    cur_repo.mark_table_free(table_id);
-    std::uint32_t occupied_time =
-        get_time() - table_info.get_last_occupied_start_time();
-    table_info.add_occupied_time(occupied_time);
-    table_info.add_money_spent(cur_repo.calculate_total_price(occupied_time));
-    cur_repo.remove_user_table(get_user_name());
+    cur_repo.remove_user_and_free_table(get_user_name(), get_time());
 
     if (cur_repo.has_waiting_users()) {
         std::string next_user = cur_repo.get_next_waiting_user();

@@ -26,16 +26,8 @@ void EmulationHandler::run_emulation() {
     auto cur_users = m_repository.get_current_users();
     for (const auto& user_name : cur_users) {
         if (m_repository.has_user_table(user_name)) {
-            std::uint32_t table_id = m_repository.get_user_table_id(user_name);
-            TableInfo& table_info = m_repository.get_tables().at(table_id);
-            m_repository.mark_table_free(table_id);
-            std::uint32_t occupied_time =
-                m_repository.get_start_info().get_end_time() -
-                table_info.get_last_occupied_start_time();
-            table_info.add_occupied_time(occupied_time);
-            table_info.add_money_spent(
-                m_repository.calculate_total_price(occupied_time));
-            m_repository.remove_user_table(user_name);
+            m_repository.remove_user_and_free_table(
+                user_name, m_repository.get_start_info().get_end_time());
         }
 
         m_repository.remove_current_user(user_name);

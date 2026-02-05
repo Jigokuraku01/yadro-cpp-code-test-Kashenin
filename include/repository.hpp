@@ -104,6 +104,9 @@ class Repository {
     void mark_table_occupied(std::uint32_t table_id);
     void mark_table_free(std::uint32_t table_id);
 
+    void remove_user_and_free_table(const std::string& user_name,
+                                    std::uint32_t time);
+
   private:
     //table_id -> TableInfo
     std::map<std::uint32_t, TableInfo> m_tables;

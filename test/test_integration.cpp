@@ -95,7 +95,7 @@ TEST_F(IntegrationTest, ClientWaitingWithoutSeat) {
 
     bool found_error = false;
     for (const auto& line : output) {
-        if (line.find("13 ICanWaitNoLonger") != std::string::npos) {
+        if (line.find("13 ClientAlreadyHasTable") != std::string::npos) {
             found_error = true;
             break;
         }
